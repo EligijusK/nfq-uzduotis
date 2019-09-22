@@ -56,24 +56,25 @@ if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSIO
     <table>
     <?php
     if(isset($_GET['ticket']) &&  isset($_GET['CheckTime']) && $_GET['ticket'] > -1) {
-        $ticketId = $_GET['ticket'];
-        $getData = "SELECT * 
-FROM SERVING
-INNER JOIN USERS ON SERVING.fk_USER_id=USERS._id
-WHERE SERVING.serviced_check = 0 AND  SERVING.fk_USER_id = '$userId' AND SERVING._id= '$ticketId'
-ORDER BY SERVING.time_submitted, SERVING.visit_time
-limit 1";
-        if ($res = mysqli_query($sql, $getData)) {
-            while ($row = mysqli_fetch_row($res)) {
-                ?>
-                <tr>
-                    <th><?php echo $row[0] ?></th>
-                    <th><?php echo $row[1] ?></th>
-                    <th><?php echo $row[3] ?></th>
-                    <th><?php echo $row[11] ?></th>
-                    <th><?php echo $row[12] ?></th>
-                </tr>
-                <?php
+        $time = new DateTime();
+        $ticket = $_GET['ticket'];
+        $countCheck = "SELECT COUNT(serviced_check) FROM SERVING
+WHERE serviced_check = 0 AND _id <= '$ticket'
+GROUP BY serviced_check";
+        if($res = mysqli_query($sql, $countCheck))
+        {
+            if($res->num_rows > 0 && $res->num_rows != 1)
+            {
+
+                while ($row = mysqli_fetch_row($res))
+                {
+                    $time = $row[0] * AverageTime($sql);
+                    echo date("H:i:s",$time) ."\n";
+                }
+            }
+            else if($res->num_rows == 1)
+            {
+                echo "Atėjo jūsu eilė";
             }
         }
     }
@@ -81,6 +82,9 @@ limit 1";
         echo "<div>Skaičius per mažas</div>";
     }
     ?>
+    <th>
+        <?php echo $_SESSION['timePassed'] ?>
+    </th>
     </table>
     <?php
 }

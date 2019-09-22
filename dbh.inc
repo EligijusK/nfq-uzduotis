@@ -85,3 +85,43 @@ function Login($username, $password, $cnt, $admin, $table, $sql)
         echo "Užpildykite visus laukus";
     }
 }
+
+function AverageTime($sql)
+{
+    $average = new DateTime();
+    $sqlGetTimeStamps = "SELECT time_accepted, time_finished FROM SERVING WHERE serviced_check = 1 ORDER BY time_submitted DESC";
+    if ($res2 = mysqli_query($sql, $sqlGetTimeStamps)) {
+        if($res2->num_rows > 0){
+            while ($row2 = mysqli_fetch_row($res2))
+            {
+                $visitStart = new DateTime($row2[0]);
+                $visitEnd = new DateTime($row2[1]);
+                $difference = $visitStart->diff($visitEnd);
+                $timeDiff = $difference->format('%H:%I:%S');
+                $average = $average + strtotime($timeDiff);
+                //echo date("H:i:s",$average) ."\n";
+            }
+            $average = $average / $res2->num_rows;
+        }
+    }
+    return $average;
+}
+
+function LastTime($sql, $userId)
+{
+    $time = null;
+    $sqlGetTimeStamps = "SELECT time_accepted, time_finished FROM SERVING WHERE serviced_check = 1 AND fk_ADMIN_id = '$userId' ORDER BY time_submitted DESC LIMIT 1";
+    if ($res2 = mysqli_query($sql, $sqlGetTimeStamps)) {
+        if($res2->num_rows > 0){
+            while ($row2 = mysqli_fetch_row($res2))
+            {
+                $visitStart = new DateTime($row2[0]);
+                $visitEnd = new DateTime($row2[1]);
+                $difference = $visitStart->diff($visitEnd);
+                $timeDiff = $difference->format('%H:%I:%S');
+                $time = $timeDiff;
+            }
+        }
+    }
+    return $time;
+}

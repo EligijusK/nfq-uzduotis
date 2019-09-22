@@ -1,7 +1,7 @@
 <?php
 include 'header.inc';
 include 'dbh.inc';
-
+$userId = $_SESSION['userID'];
 if(isset($_GET['LogOut']))
 {
     $_SESSION['username'] = null;
@@ -13,42 +13,27 @@ if(isset($_GET['LogOut']))
 
 if(isset($_GET['finish']))
 {
+    $_SESSION['timePassed'] = null;
     $setAccepted = "UPDATE SERVING
 SET serviced_check = 1, time_finished = NOW()
-WHERE serviced_check = 0
+WHERE serviced_check = 0 AND fk_ADMIN_id NOT NULL 
 ORDER BY time_submitted, visit_time
 LIMIT 1";
     if(mysqli_query($sql, $setAccepted))
     {
 
     }
-    $sqlGetTimeStamps = "SELECT time_accepted, time_finished FROM SERVING WHERE serviced_check = 1 ORDER BY time_submitted DESC LIMIT 1";
-    if ($res2 = mysqli_query($sql, $sqlGetTimeStamps)) {
-        if($res2->num_rows > 0){
-            while ($row2 = mysqli_fetch_row($res2))
-            {
-                $visitStart = new DateTime($row2[0]);
-                $visitEnd = new DateTime($row2[1]);
-                $difference = $visitStart->diff($visitEnd);
-                $timeDiff = $difference->format('%H:%I:%S');
-                $_SESSION['timePassed'] = $timeDiff;
-            }
-        }
-    }
 
 }
 
 if(isset($_GET['accept']))
 {
-    $_SESSION['timePassed'] = strtotime("today");
-    $id = $_SESSION['userID'];
     $setAccepted = "UPDATE SERVING
-SET time_accepted = NOW(), time_finished = NOW(), fk_ADMIN_id = '$id'
-WHERE serviced_check = 0
+SET time_accepted = NOW(), time_finished = NOW(), fk_ADMIN_id = '$userId'
+WHERE serviced_check = 0 AND (SERVING.fk_ADMIN_id IS NULL OR SERVING.fk_ADMIN_id = '$userId')
 ORDER BY time_submitted, visit_time
 LIMIT 1";
     mysqli_query($sql, $setAccepted);
-    $_SESSION['timePassed'] = null;
 
 }
 
@@ -67,7 +52,7 @@ LIMIT 1";
         $getData = "SELECT * 
 FROM SERVING
 INNER JOIN USERS ON SERVING.fk_USER_id=USERS._id
-WHERE SERVING.serviced_check = 0
+WHERE SERVING.serviced_check = 0 AND (SERVING.fk_ADMIN_id IS NULL OR SERVING.fk_ADMIN_id = '$userId')
 ORDER BY SERVING.time_submitted, SERVING.visit_time
 limit 1";
         if($res = mysqli_query($sql, $getData))
@@ -105,7 +90,7 @@ limit 1";
         </tr>
         <tr>
             <th>
-                <?php if($_SESSION['timePassed'] != null) { echo $_SESSION['timePassed']; } ?>
+                <?php echo LastTime($sql, $userId) ?>
             </th>
         </tr>
     </table>
