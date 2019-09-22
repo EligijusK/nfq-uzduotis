@@ -17,6 +17,7 @@ if($_POST["register"] == "Registruotis")
             VALUES ('$username', '$name', '$last', '$hashedPassword')";
             if(mysqli_query($sql, $db))
             {
+                echo "Sėkminga registracija";
             }
             else
             {

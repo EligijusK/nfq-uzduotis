@@ -1,11 +1,28 @@
 <?php
+session_start();
+$_SESSION['username'];
+$_SESSION['administrator'];
 ?>
 <form action="index.php">
     <input type="submit" value="Pagrindinis puslapis"/>
 </form>
+<?php if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == false)
+    { ?>
+        <form action="user.php">
+            <input type="submit" value="Naudotojo zona" />
+        </form>
+        <form action="user.php">
+            <input type="submit" name="LogOut" value="Atsijungti"/>
+        </form>
+    <?php }
+    else
+        { ?>
 <form action="client-login.php">
     <input type="submit" value="Vartotojo Prisijungimas" />
 </form>
 <form action="admin-login.php">
     <input type="submit" value="Darbuotojo prisijungimas"/>
 </form>
+<?php  } ?>
+
+
