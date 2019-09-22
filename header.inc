@@ -2,11 +2,12 @@
 session_start();
 $_SESSION['username'];
 $_SESSION['administrator'];
+$_SESSION['userID'];
 ?>
 <form action="index.php">
     <input type="submit" value="Pagrindinis puslapis"/>
 </form>
-<?php if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == false)
+<?php if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == false && isset($_SESSION['userID']))
     { ?>
         <form action="user.php">
             <input type="submit" value="Naudotojo zona" />
@@ -15,7 +16,7 @@ $_SESSION['administrator'];
             <input type="submit" name="LogOut" value="Atsijungti"/>
         </form>
     <?php }
-    else if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == true)
+    else if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == true && isset($_SESSION['userID']))
     { ?>
         <form action="admin.php">
             <input type="submit" value="Valdytojo zona" />

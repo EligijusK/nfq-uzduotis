@@ -29,14 +29,15 @@ if(mysqli_query($sql, $createDB))
 //    last_name VARCHAR (30),
 //    password VARCHAR(256));
 //
+
 //    CREATE TABLE IF NOT EXISTS SERVING (
 //    _id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 //    servicing_info VARCHAR(256),
 //    serviced_check int(1) NOT NULL,
+//    visit_time int(6) NOT NULL,
+//    time_submited TIMESTAMP NOT NULL,
 //    fk_USER_id int(11) NOT NULL,
-//    fk_ADMIN_id int(11) NOT NULL,
-//    KEY `serviced` (`fk_USER_id`),
-//    KEY `servicing` (`fk_ADMIN_id`));
+//    fk_ADMIN_id int(11));
 //
 //    ALTER TABLE `SERVING`
 //    ADD CONSTRAINT `serviced` FOREIGN KEY (`fk_USER_id`) REFERENCES `USERS` (`_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
@@ -64,9 +65,15 @@ function Login($username, $password, $cnt, $admin, $table, $sql)
             while ($row = mysqli_fetch_row($res)) {
                 if((password_verify ($password, $row[5]) && $admin == true) || (password_verify ($password, $row[4]) && $admin == false))
                 {
+                    $_SESSION['userID'] = $row[0];
                     $_SESSION['username'] = $row[1];
                     $_SESSION['administrator'] = $admin;
-                    header("Location: ./user.php");
+                    if($admin == false) {
+                        header("Location: ./user.php");
+                    }
+                    else{
+                        header("Location: ./admin.php");
+                    }
                     exit;
                 }
             }
