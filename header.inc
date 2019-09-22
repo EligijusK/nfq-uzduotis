@@ -3,6 +3,7 @@ session_start();
 $_SESSION['username'];
 $_SESSION['administrator'];
 $_SESSION['userID'];
+$_SESSION['timePassed'];
 ?>
 <form action="index.php">
     <input type="submit" value="Pagrindinis puslapis"/>

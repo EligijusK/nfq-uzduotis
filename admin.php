@@ -1,11 +1,13 @@
 <?php
 include 'header.inc';
 include 'dbh.inc';
+
 if(isset($_GET['LogOut']))
 {
     $_SESSION['username'] = null;
     $_SESSION['administrator'] = null;
     $_SESSION['userID'] = null;
+    $_SESSION['timePassed'] = null;
     header( "Location: ./admin-login.php");
 }
 
@@ -20,19 +22,33 @@ LIMIT 1";
     {
 
     }
+    $sqlGetTimeStamps = "SELECT time_accepted, time_finished FROM SERVING WHERE serviced_check = 1 ORDER BY time_submitted DESC LIMIT 1";
+    if ($res2 = mysqli_query($sql, $sqlGetTimeStamps)) {
+        if($res2->num_rows > 0){
+            while ($row2 = mysqli_fetch_row($res2))
+            {
+                $visitStart = new DateTime($row2[0]);
+                $visitEnd = new DateTime($row2[1]);
+                $difference = $visitStart->diff($visitEnd);
+                $timeDiff = $difference->format('%H:%I:%S');
+                $_SESSION['timePassed'] = $timeDiff;
+            }
+        }
+    }
+
 }
 
 if(isset($_GET['accept']))
 {
+    $_SESSION['timePassed'] = strtotime("today");
+    $id = $_SESSION['userID'];
     $setAccepted = "UPDATE SERVING
-SET time_accepted = NOW(), time_finished = NOW()
+SET time_accepted = NOW(), time_finished = NOW(), fk_ADMIN_id = '$id'
 WHERE serviced_check = 0
 ORDER BY time_submitted, visit_time
 LIMIT 1";
-    if(mysqli_query($sql, $setAccepted))
-    {
-
-    }
+    mysqli_query($sql, $setAccepted);
+    $_SESSION['timePassed'] = null;
 
 }
 
@@ -85,6 +101,11 @@ limit 1";
                 <form>
                     <input type="submit" name="finish" value="Klientas aptarnautas">
                 </form>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <?php if($_SESSION['timePassed'] != null) { echo $_SESSION['timePassed']; } ?>
             </th>
         </tr>
     </table>
