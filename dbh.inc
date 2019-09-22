@@ -35,15 +35,16 @@ if(mysqli_query($sql, $createDB))
 //    servicing_info VARCHAR(256),
 //    serviced_check int(1) NOT NULL,
 //    visit_time int(6) NOT NULL,
-//    time_submited TIMESTAMP NOT NULL,
+//    time_submitted TIMESTAMP NOT NULL,
+//    time_accepted TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+//    time_finished TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 //    fk_USER_id int(11) NOT NULL,
 //    fk_ADMIN_id int(11));
 //
 //    ALTER TABLE `SERVING`
 //    ADD CONSTRAINT `serviced` FOREIGN KEY (`fk_USER_id`) REFERENCES `USERS` (`_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
 //    ADD CONSTRAINT `servicing` FOREIGN KEY (`fk_ADMIN_id`) REFERENCES `ADMINS` (`_id`) ON DELETE CASCADE ON UPDATE RESTRICT;
-//
-//    ";
+//        ";
 
     }
 }
