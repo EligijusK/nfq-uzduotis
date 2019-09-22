@@ -12,25 +12,8 @@ foreach ($_POST as $key => $value) {
     }
 }
 
-if($cnt === 2) {
-    $loginRequest = "SELECT * FROM ADMINS
-    WHERE admin_user = '$username' ";
-    if ($res = mysqli_query($sql, $loginRequest)) {
-
-        while ($row = mysqli_fetch_row($res)) {
-            if(password_verify ($password, $row[5]))
-            {
-                $_SESSION['username'] = $row[1];
-                $_SESSION['administrator'] = true;
-                header("Location: ./user.php");
-                exit;
-            }
-        }
-    }
-}
-else
-{
-    echo "Užpildykite visus laukus";
+if(isset($_POST['Login'])) {
+    Login($username, $password, $cnt, true, "ADMINS", $sql);
 }
 ?>
 
@@ -44,7 +27,7 @@ else
 <form action="" method="post">
     <input type="text" name="username"/>
     <input type="password" name="password"/>
-    <input type="submit" value="Login"/>
+    <input type="submit" name="Login" value="Login"/>
 </form>
 </body>
 </html>

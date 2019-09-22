@@ -47,3 +47,33 @@ if(mysqli_query($sql, $createDB))
     }
 }
 
+function Login($username, $password, $cnt, $admin, $table, $sql)
+{
+    if($cnt === 3) {
+        if($admin == true) {
+            $loginRequest = "SELECT * FROM `$table`
+    WHERE admin_user = '$username' ";
+        }
+        else if($admin == false)
+        {
+            $loginRequest = "SELECT * FROM `$table`
+    WHERE username = '$username' ";
+        }
+        if ($res = mysqli_query($sql, $loginRequest)) {
+
+            while ($row = mysqli_fetch_row($res)) {
+                if((password_verify ($password, $row[5]) && $admin == true) || (password_verify ($password, $row[4]) && $admin == false))
+                {
+                    $_SESSION['username'] = $row[1];
+                    $_SESSION['administrator'] = $admin;
+                    header("Location: ./user.php");
+                    exit;
+                }
+            }
+        }
+    }
+    else
+    {
+        echo "Užpildykite visus laukus";
+    }
+}

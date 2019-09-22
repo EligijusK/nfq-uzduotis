@@ -1,5 +1,6 @@
 <?php
-
+include 'header.inc';
+include 'dbh.inc';
 ?>
 <!DOCTYPE html>
 <html>
@@ -7,11 +8,12 @@
     <title>Page Title</title>
 </head>
 <body>
-<div>
-<?php include 'header.inc' ?>
-</div>
-<div>
 
+<div>
+<?php
+    
+?>
 </div>
+
 </body>
 </html>
