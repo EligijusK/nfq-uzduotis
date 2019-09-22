@@ -9,6 +9,33 @@ if(isset($_GET['LogOut']))
     header( "Location: ./admin-login.php");
 }
 
+if(isset($_GET['finish']))
+{
+    $setAccepted = "UPDATE SERVING
+SET serviced_check = 1, time_finished = NOW()
+WHERE serviced_check = 0
+ORDER BY time_submitted, visit_time
+LIMIT 1";
+    if(mysqli_query($sql, $setAccepted))
+    {
+
+    }
+}
+
+if(isset($_GET['accept']))
+{
+    $setAccepted = "UPDATE SERVING
+SET time_accepted = NOW(), time_finished = NOW()
+WHERE serviced_check = 0
+ORDER BY time_submitted, visit_time
+LIMIT 1";
+    if(mysqli_query($sql, $setAccepted))
+    {
+
+    }
+
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -50,6 +77,9 @@ limit 1";
             <form>
                 <input type="submit" name="accept" value="Priimti klientą">
             </form>
+            </th>
+            <th>
+
             </th>
             <th>
                 <form>
