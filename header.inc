@@ -15,6 +15,16 @@ $_SESSION['administrator'];
             <input type="submit" name="LogOut" value="Atsijungti"/>
         </form>
     <?php }
+    else if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == true)
+    { ?>
+        <form action="admin.php">
+            <input type="submit" value="Valdytojo zona" />
+        </form>
+        <form action="admin.php">
+            <input type="submit" name="LogOut" value="Atsijungti"/>
+        </form>
+
+    <?php }
     else
         { ?>
 <form action="client-login.php">
