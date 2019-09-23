@@ -41,11 +41,11 @@ if(isset($_POST["register"]) && $_POST["register"] == "Registruotis")
 <?php include 'header.inc'?>
 
 <form method="post" action="">
-    <input type="text" name="username"/>
-    <input type="text" name="name"/>
-    <input type="text" name="last_name"/>
-    <input type="password" name="password"/>
-    <input type="password" name="passwordCheck"/>
+    <input type="text" name="username" placeholder="Username"/>
+    <input type="text" name="name" placeholder="First Name"/>
+    <input type="text" name="last_name" placeholder="Last Name"/>
+    <input type="password" name="password" placeholder="Password"/>
+    <input type="password" name="passwordCheck" placeholder="Check Password"/>
     <input type="submit" name="register" value="Registruotis"/>
 </form>
 

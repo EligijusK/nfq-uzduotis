@@ -72,8 +72,8 @@ WHERE fk_USER_id = '$userId' AND serviced_check = 0";
 if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == false && isset($_SESSION['userID'])) {
     ?>
     <form>
-        <input type="number" name="time"/>
-        <input type="text" name="info">
+        <input type="number" name="time" placeholder="Time"/>
+        <input type="text" name="info" placeholder="Information about Visit">
         <input type="submit" name="submitVisit" value="Registruotis vizitui"/>
     </form>
     <div>
@@ -86,7 +86,7 @@ if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSIO
     </div>
     <div>
             <form >
-                <input type="number" name="ticket">
+                <input type="number" name="ticket" placeholder="Ticket id"/>
                 <input type="submit" name="CheckTime" value="Patrikrinti laiką">
             </form>
     </div>

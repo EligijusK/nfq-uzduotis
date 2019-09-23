@@ -28,8 +28,8 @@ if(isset($_POST['Login'])) {
     {
 ?>
 <form action="" method="post">
-    <input type="text" name="username"/>
-    <input type="password" name="password"/>
+    <input type="text" name="username" placeholder="Username"/>
+    <input type="password" name="password" placeholder="Password"/>
     <input type="submit" name="Login" value="Login"/>
 </form>
 <?php }
