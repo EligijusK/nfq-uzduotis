@@ -4,24 +4,24 @@ $username = $_POST["username"];
 $name = $_POST["name"];
 $last = $_POST["last_name"];
 $pass = $_POST["password"];
-
+$info = "";
 if($_POST["register"] == "Registruotis")
 {
     if ($_POST["username"] == '' && $_POST["name"] == '' && $_POST["last_name"] == '' && $_POST["password"] == '' && $_POST["passwordCheck"] == '') {
         echo "Prašome užpildyti visus laukelius";
     } else {
         if ($_POST["passwordCheck"] === $_POST["password"]) {
-            echo $last;
             $hashedPassword = password_hash($pass, PASSWORD_DEFAULT);
             $db = "INSERT INTO USERS (username, first_name, last_name, PASSWORD)
             VALUES ('$username', '$name', '$last', '$hashedPassword')";
             if(mysqli_query($sql, $db))
             {
-                echo "Sėkminga registracija";
+                $info = "Sėkminga registracija";
             }
             else
             {
-                echo "toks vartotojas su tokiu vartotojo vardu jau egzistuoja";
+                $info = "toks vartotojas su tokiu vartotojo vardu jau egzistuoja";
+
             }
         }
         else {
@@ -48,5 +48,8 @@ if($_POST["register"] == "Registruotis")
     <input type="submit" name="register" value="Registruotis"/>
 </form>
 
+<div>
+    <?php echo $info; ?>
+</div>
 </body>
 </html>

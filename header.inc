@@ -1,10 +1,11 @@
 <?php
-session_start();
-$_SESSION['username'];
-$_SESSION['administrator'];
-$_SESSION['userID'];
-$_SESSION['timePassed'];
+include 'session.php';
 ?>
+<head>
+
+    <script src="js/jquery-3.4.1.min.js"></script>
+
+</head>
 <form action="index.php">
     <input type="submit" value="Pagrindinis puslapis"/>
 </form>

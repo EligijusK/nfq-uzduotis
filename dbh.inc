@@ -86,6 +86,33 @@ function Login($username, $password, $cnt, $admin, $table, $sql)
     }
 }
 
+function checkTime($sql, $userId)
+{
+    if (isset($_SESSION['ticketId']) && isset($_SESSION['username']) && isset($_SESSION['administrator']) && isset($_SESSION['userID']) && $_SESSION['administrator'] == false) {
+        $ticket = $_SESSION['ticketId'];
+        $time = array(
+            'data' => ""
+        );
+        $acurateTime = "SELECT visit_time FROM SERVING
+WHERE serviced_check = 0 AND _id < '$ticket' ";
+        if ($res = mysqli_query($sql, $acurateTime)) {
+            if ($res->num_rows > 0) {
+                $time['data'] = 0;
+                while ($row = mysqli_fetch_row($res)) {
+                    $time['data'] += $row[0];
+                }
+            }else if($res->num_rows == 0)
+            {
+                $time['data'] = "Atėjo jūsu eilė";
+            }
+        }
+
+
+        return $time['data'];
+    }
+
+}
+
 function AverageTime($sql)
 {
     $average = new DateTime();

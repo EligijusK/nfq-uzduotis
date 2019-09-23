@@ -2,14 +2,36 @@
 include 'dbh.inc';
 include 'header.inc';
 $userId = $_SESSION['userID'];
+
 if(isset($_GET['LogOut']))
 {
     $_SESSION['username'] = null;
     $_SESSION['administrator'] = null;
     $_SESSION['userID'] = null;
     $_SESSION['LogedIn'] = false;
+    $_SESSION['ticketId'] = null;
+    $userId = null;
     header( "Location: ./client-login.php");
 }
+
+if($_SESSION['ticketId'] == null)
+{
+
+    $getTicketNumber = "SELECT _id FROM SERVING WHERE fk_USER_id = '$userId' AND serviced_check = '0' LIMIT 1";
+    if($res = mysqli_query($sql, $getTicketNumber))
+    {
+        if($res->num_rows > 0)
+        {
+
+            while ($row = mysqli_fetch_row($res))
+            {
+                $_SESSION['ticketId'] = $row[0];
+            }
+        }
+    }
+
+}
+
 if($_GET['time'] <= 0 && isset($_GET['submitVisit']))
 {
     echo "vizito laikas turi užtrukti ilgiau negu 0 minučių";
@@ -49,43 +71,44 @@ if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSIO
         <input type="text" name="info">
         <input type="submit" name="submitVisit" value="Registruotis vizitui"/>
     </form>
-    <form>
-        <input type="number" name="ticket">
-        <input type="submit" name="CheckTime" value="Patrikrinti laiką">
-    </form>
-    <table>
-    <?php
-    if(isset($_GET['ticket']) &&  isset($_GET['CheckTime']) && $_GET['ticket'] > -1) {
-        $time = new DateTime();
-        $ticket = $_GET['ticket'];
-        $countCheck = "SELECT COUNT(serviced_check) FROM SERVING
-WHERE serviced_check = 0 AND _id <= '$ticket'
+    <div>
+        <?php echo $_SESSION['ticketId'] ?>
+    </div>
+    <div>
+            <form>
+                <input type="number" name="ticket">
+                <input type="submit" name="CheckTime" value="Patrikrinti laiką">
+            </form>
+    </div>
+    <div class="accurateTime">
+        <?php echo "laukimo laikas: ". checkTime($sql, $userId) . "(min)" ?>
+    </div>
+    <div class="approximateTime">
+        <?php
+        if(isset($_GET['ticket']) &&  isset($_GET['CheckTime']) && $_GET['ticket'] > -1) {
+            $time = new DateTime();
+            $ticket = $_GET['ticket'];
+            $countCheck = "SELECT COUNT(serviced_check) FROM SERVING
+WHERE serviced_check = 0 AND _id < '$ticket'
 GROUP BY serviced_check";
-        if($res = mysqli_query($sql, $countCheck))
-        {
-            if($res->num_rows > 0 && $res->num_rows != 1)
+            if($res = mysqli_query($sql, $countCheck))
             {
-
-                while ($row = mysqli_fetch_row($res))
+                if($res->num_rows > 0)
                 {
-                    $time = $row[0] * AverageTime($sql);
-                    echo date("H:i:s",$time) ."\n";
+                    while ($row = mysqli_fetch_row($res))
+                    {
+                        $time = $row[0] * AverageTime($sql);
+                        echo "Vidutinis laukimo laikas pagal specialista: ". date("H:i:s",$time) . " (Valandos:Minutes:Sekundes)";
+                    }
                 }
             }
-            else if($res->num_rows == 1)
-            {
-                echo "Atėjo jūsu eilė";
-            }
         }
-    }
-    else if (isset($_GET['ticket']) && $_GET['ticket'] > -1){
-        echo "<div>Skaičius per mažas</div>";
-    }
-    ?>
-    <th>
-        <?php echo $_SESSION['timePassed'] ?>
-    </th>
-    </table>
+        else if (isset($_GET['ticket']) && $_GET['ticket'] > -1){
+            echo "<div>Skaičius per mažas</div>";
+        }
+        ?>
+    </div>
+
     <?php
 }
 else if($_SESSION['administrator'] == true)
@@ -100,6 +123,9 @@ else if ($_SESSION['administrator'] == null)
 }
 ?>
 </body>
+<footer>
+    <script src="js/UpdateTime.js"></script>
+</footer>
 </html>
 
 
