@@ -14,48 +14,41 @@ if(isset($_GET['LogOut']))
     header( "Location: ./client-login.php");
 }
 
-if($_SESSION['ticketId'] == null)
-{
+if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == false && isset($_SESSION['userID'])) {
+    if ($_SESSION['ticketId'] == null) {
 
-    $getTicketNumber = "SELECT _id FROM SERVING WHERE fk_USER_id = '$userId' AND serviced_check = '0' LIMIT 1";
-    if($res = mysqli_query($sql, $getTicketNumber))
-    {
-        if($res->num_rows > 0)
-        {
+        $getTicketNumber = "SELECT _id FROM SERVING WHERE fk_USER_id = '$userId' AND serviced_check = '0' LIMIT 1";
+        if ($res = mysqli_query($sql, $getTicketNumber)) {
+            if ($res->num_rows > 0) {
 
-            while ($row = mysqli_fetch_row($res))
-            {
-                $_SESSION['ticketId'] = $row[0];
+                while ($row = mysqli_fetch_row($res)) {
+                    $_SESSION['ticketId'] = $row[0];
+                }
             }
         }
+
     }
 
-}
-
-if($_GET['time'] <= 0 && isset($_GET['submitVisit']))
-{
-    echo "vizito laikas turi užtrukti ilgiau negu 0 minučių";
-}
-else if($_GET['time'] > 0 && isset($_GET['submitVisit']))
-{
-    $info = $_GET['info'];
-    $visitTime = $_GET['time'];
-    $checkIfInsert = "SELECT serviced_check, fk_USER_id FROM SERVING
+    if ($_GET['time'] <= 0 && isset($_GET['submitVisit'])) {
+        echo "vizito laikas turi užtrukti ilgiau negu 0 minučių";
+    } else if ($_GET['time'] > 0 && isset($_GET['submitVisit'])) {
+        $info = $_GET['info'];
+        $visitTime = $_GET['time'];
+        $checkIfInsert = "SELECT serviced_check, fk_USER_id FROM SERVING
 WHERE fk_USER_id = '$userId' AND serviced_check = 0";
-    if($res = mysqli_query($sql, $checkIfInsert)) {
-        if($res->num_rows == 0) {
-            $insertVisit = "INSERT INTO SERVING (servicing_info, serviced_check, visit_time, fk_USER_id)
+        if ($res = mysqli_query($sql, $checkIfInsert)) {
+            if ($res->num_rows == 0) {
+                $insertVisit = "INSERT INTO SERVING (servicing_info, serviced_check, visit_time, fk_USER_id)
             VALUES ('$info', '0', '$visitTime', '$userId')";
-            if (mysqli_query($sql, $insertVisit)) {
+                if (mysqli_query($sql, $insertVisit)) {
 
+                }
+            } else {
+                echo "Jūsų vizitas jau suplanuotas";
             }
-        }
-        else{
-            echo "Jūsų vizitas jau suplanuotas";
         }
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -119,9 +112,7 @@ GROUP BY serviced_check";
 else if (isset($_GET['ticket']) && $_GET['ticket'] > -1){
     echo "<div>Skaičius per mažas</div>";
 }
-?>
 
-<?php
 }
 else if($_SESSION['administrator'] == true)
 {

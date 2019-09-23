@@ -10,31 +10,29 @@ if(isset($_GET['LogOut']))
     $_SESSION['timePassed'] = null;
     header( "Location: ./admin-login.php");
 }
-
-if(isset($_GET['finish']))
-{
-    $_SESSION['timePassed'] = null;
-    $setAccepted = "UPDATE SERVING
+if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == true && isset($_SESSION['userID'])) {
+    if (isset($_GET['finish'])) {
+        $_SESSION['timePassed'] = null;
+        $setAccepted = "UPDATE SERVING
 SET serviced_check = 1, time_finished = NOW()
 WHERE serviced_check = 0 AND fk_ADMIN_id NOT NULL 
 ORDER BY time_submitted, visit_time
 LIMIT 1";
-    if(mysqli_query($sql, $setAccepted))
-    {
+        if (mysqli_query($sql, $setAccepted)) {
+
+        }
 
     }
 
-}
-
-if(isset($_GET['accept']))
-{
-    $setAccepted = "UPDATE SERVING
+    if (isset($_GET['accept'])) {
+        $setAccepted = "UPDATE SERVING
 SET time_accepted = NOW(), time_finished = NOW(), fk_ADMIN_id = '$userId'
 WHERE serviced_check = 0 AND (SERVING.fk_ADMIN_id IS NULL OR SERVING.fk_ADMIN_id = '$userId')
 ORDER BY time_submitted, visit_time
 LIMIT 1";
-    mysqli_query($sql, $setAccepted);
+        mysqli_query($sql, $setAccepted);
 
+    }
 }
 
 ?>
@@ -45,7 +43,9 @@ LIMIT 1";
     <title>Page Title</title>
 </head>
 <body>
-
+<?php
+if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == true && isset($_SESSION['userID'])) {
+    ?>
 <div>
     <table style="width:100%">
         <?php
@@ -95,6 +95,17 @@ limit 1";
         </tr>
     </table>
 </div>
-
+<?php }
+else if($_SESSION['administrator'] == false)
+{
+    header("Location: ./user.php");
+    exit();
+}
+else if ($_SESSION['administrator'] == null)
+{
+    header("Location: ./admin-login.php");
+    exit();
+}
+?>
 </body>
 </html>
