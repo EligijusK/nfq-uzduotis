@@ -15,6 +15,7 @@ if(isset($_GET['LogOut']))
 }
 
 if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == false && isset($_SESSION['userID'])) {
+
     if ($_SESSION['ticketId'] == null) {
 
         $getTicketNumber = "SELECT _id FROM SERVING WHERE fk_USER_id = '$userId' AND serviced_check = '0' LIMIT 1";
@@ -48,6 +49,16 @@ WHERE fk_USER_id = '$userId' AND serviced_check = 0";
             }
         }
     }
+
+    if(isset($_POST['cancelVisit']))
+    {
+        $removeFromWaiting = "DELETE FROM SERVING WHERE fk_USER_id = '$userId' AND serviced_check = 0";
+        if(mysqli_query($sql, $removeFromWaiting))
+        {
+            $_SESSION['ticketId'] = null;
+            echo "visitas panaikintas";
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -65,16 +76,21 @@ if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSIO
         <input type="submit" name="submitVisit" value="Registruotis vizitui"/>
     </form>
     <div>
-        <?php echo "Jūsu laukimo biletas: " . $_SESSION['ticketId'] ?>
+        <?php if(isset($_SESSION['ticketId'])) { echo "Jūsu laukimo biletas: " . $_SESSION['ticketId']; } ?>
     </div>
     <div>
-            <form>
+        <form method="post">
+            <input type="submit" name="cancelVisit" value="Atšaukti Vizitą">
+        </form>
+    </div>
+    <div>
+            <form >
                 <input type="number" name="ticket">
                 <input type="submit" name="CheckTime" value="Patrikrinti laiką">
             </form>
     </div>
 <?php
-if(isset($_GET['ticket']) &&  isset($_GET['CheckTime']) && $_GET['ticket'] > -1) { ?>
+if(isset($_GET['ticket']) &&  isset($_GET['CheckTime']) && $_GET['ticket'] > -1 && isset($_SESSION['ticketId'])) { ?>
     <div class="accurateTime">
         <?php
         $returnData = checkTime($sql, $userId);
@@ -89,7 +105,7 @@ if(isset($_GET['ticket']) &&  isset($_GET['CheckTime']) && $_GET['ticket'] > -1)
 <?php } ?>
 
 <?php
-if(isset($_GET['ticket']) &&  isset($_GET['CheckTime']) && $_GET['ticket'] > -1) {
+if(isset($_GET['ticket']) &&  isset($_GET['CheckTime']) && $_GET['ticket'] > -1 && isset($_SESSION['ticketId'])) {
     ?> <div class="approximateTime"> <?php
     $time = new DateTime();
     $ticket = $_GET['ticket'];
@@ -109,7 +125,7 @@ GROUP BY serviced_check";
     }
     ?> </div> <?php
 }
-else if (isset($_GET['ticket']) && $_GET['ticket'] > -1){
+else if (isset($_GET['ticket']) && $_GET['ticket'] > -1 && sset($_SESSION['ticketId'])){
     echo "<div>Skaičius per mažas</div>";
 }
 
