@@ -5,7 +5,7 @@ $data = array(
     'timeAproximate' => '',
     'time' => ''
 );
-if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == false && isset($_SESSION['userID']) &&$_SESSION['ticketId'] &&  $_SESSION['ticketId'] > -1 ) {
+if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == false && isset($_SESSION['userID']) && isset($_SESSION['ticketId']) &&  $_SESSION['ticketId'] > -1 ) {
     $time = new DateTime();
     $ticket = $_SESSION['ticketId'];
     $countCheck = "SELECT COUNT(serviced_check) FROM SERVING
@@ -25,7 +25,13 @@ GROUP BY serviced_check";
             $data['timeAproximate'] = "";
         }
     }
-    $data['time'] = "laukimo laikas: ". checkTime($sql, $_SESSION['userID']) . "(min)";
+    $dataReturned = checkTime($sql, $_SESSION['userID']);
+    if($dataReturned['res'] == true) {
+        $data['time'] = "laukimo laikas: " . $dataReturned['data'] . "(min)";
+    }
+    else {
+        $data['time'] = "laukimo laikas: " . $dataReturned['data'];
+    }
     echo json_encode($data);
 }
 else{

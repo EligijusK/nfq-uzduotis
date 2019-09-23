@@ -91,7 +91,8 @@ function checkTime($sql, $userId)
     if (isset($_SESSION['ticketId']) && isset($_SESSION['username']) && isset($_SESSION['administrator']) && isset($_SESSION['userID']) && $_SESSION['administrator'] == false) {
         $ticket = $_SESSION['ticketId'];
         $time = array(
-            'data' => ""
+            'data' => "",
+            'res' => ""
         );
         $acurateTime = "SELECT visit_time FROM SERVING
 WHERE serviced_check = 0 AND _id < '$ticket' ";
@@ -100,15 +101,17 @@ WHERE serviced_check = 0 AND _id < '$ticket' ";
                 $time['data'] = 0;
                 while ($row = mysqli_fetch_row($res)) {
                     $time['data'] += $row[0];
+                    $time['res'] = true;
                 }
             }else if($res->num_rows == 0)
             {
+                $time['res'] = false;
                 $time['data'] = "Atėjo jūsu eilė";
             }
         }
 
 
-        return $time['data'];
+        return $time;
     }
 
 }

@@ -72,7 +72,7 @@ if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSIO
         <input type="submit" name="submitVisit" value="Registruotis vizitui"/>
     </form>
     <div>
-        <?php echo $_SESSION['ticketId'] ?>
+        <?php echo "Jūsu laukimo biletas: " . $_SESSION['ticketId'] ?>
     </div>
     <div>
             <form>
@@ -80,46 +80,58 @@ if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSIO
                 <input type="submit" name="CheckTime" value="Patrikrinti laiką">
             </form>
     </div>
+<?php
+if(isset($_GET['ticket']) &&  isset($_GET['CheckTime']) && $_GET['ticket'] > -1) { ?>
     <div class="accurateTime">
-        <?php echo "laukimo laikas: ". checkTime($sql, $userId) . "(min)" ?>
-    </div>
-    <div class="approximateTime">
         <?php
-        if(isset($_GET['ticket']) &&  isset($_GET['CheckTime']) && $_GET['ticket'] > -1) {
-            $time = new DateTime();
-            $ticket = $_GET['ticket'];
-            $countCheck = "SELECT COUNT(serviced_check) FROM SERVING
+        $returnData = checkTime($sql, $userId);
+        if($returnData['res'] == true)
+        {
+        echo "laukimo laikas: ". $returnData['data'] . "(min)";
+        }
+        else if($returnData['res'] == false){
+            echo "laukimo laikas: ". $returnData['data'];
+        } ?>
+    </div>
+<?php } ?>
+
+<?php
+if(isset($_GET['ticket']) &&  isset($_GET['CheckTime']) && $_GET['ticket'] > -1) {
+    ?> <div class="approximateTime"> <?php
+    $time = new DateTime();
+    $ticket = $_GET['ticket'];
+    $countCheck = "SELECT COUNT(serviced_check) FROM SERVING
 WHERE serviced_check = 0 AND _id < '$ticket'
 GROUP BY serviced_check";
-            if($res = mysqli_query($sql, $countCheck))
+    if($res = mysqli_query($sql, $countCheck))
+    {
+        if($res->num_rows > 0)
+        {
+            while ($row = mysqli_fetch_row($res))
             {
-                if($res->num_rows > 0)
-                {
-                    while ($row = mysqli_fetch_row($res))
-                    {
-                        $time = $row[0] * AverageTime($sql);
-                        echo "Vidutinis laukimo laikas pagal specialista: ". date("H:i:s",$time) . " (Valandos:Minutes:Sekundes)";
-                    }
-                }
+                $time = $row[0] * AverageTime($sql);
+                echo "Vidutinis laukimo laikas pagal specialista: ". date("H:i:s",$time) . " (Valandos:Minutes:Sekundes)";
             }
         }
-        else if (isset($_GET['ticket']) && $_GET['ticket'] > -1){
-            echo "<div>Skaičius per mažas</div>";
-        }
-        ?>
-    </div>
+    }
+    ?> </div> <?php
+}
+else if (isset($_GET['ticket']) && $_GET['ticket'] > -1){
+    echo "<div>Skaičius per mažas</div>";
+}
+?>
 
-    <?php
+<?php
 }
 else if($_SESSION['administrator'] == true)
 {
-    header("Location: ./admin.php");
-    exit();
+header("Location: ./admin.php");
+exit();
 }
 else if ($_SESSION['administrator'] == null)
 {
-    header("Location: ./client-login.php");
-    exit();
+header("Location: ./client-login.php");
+exit();
 }
 ?>
 </body>

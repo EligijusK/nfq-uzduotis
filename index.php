@@ -38,39 +38,7 @@ limit 10";
 ?>
     </table>
 </div>
-<?php
-if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == false && isset($_SESSION['userID'])) {
-    ?>
-    <div class="accurateTime">
-        <?php  echo "laukimo laikas: ". checkTime($sql, $_SESSION['userID']) . "(min)" ?>
-    </div>
-    <div class="approximateTime">
-        <?php
-        if(isset($_SESSION['ticketId']) &&  $_SESSION['ticketId'] > -1) {
-            $time = new DateTime();
-            $ticket = $_SESSION['ticketId'];
-            $countCheck = "SELECT COUNT(serviced_check) FROM SERVING
-WHERE serviced_check = 0 AND _id < '$ticket'
-GROUP BY serviced_check";
-            if($res = mysqli_query($sql, $countCheck))
-            {
-                if($res->num_rows > 0)
-                {
-                    while ($row = mysqli_fetch_row($res))
-                    {
-                        $time = $row[0] * AverageTime($sql);
-                        echo "Vidutinis laukimo laikas pagal specialista: ". date("H:i:s",$time). " (Valandos:Minutes:Sekundes)";
-                    }
-                }
-            }
-        }
-        ?>
-    </div>
-<?php }
-?>
 
 </body>
-<footer>
-    <script src="js/UpdateTime.js"></script>
-</footer>
+
 </html>
