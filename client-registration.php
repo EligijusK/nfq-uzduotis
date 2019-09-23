@@ -1,12 +1,13 @@
 <?php
+include 'session.inc';
 include 'dbh.inc';
-$username = $_POST["username"];
-$name = $_POST["name"];
-$last = $_POST["last_name"];
-$pass = $_POST["password"];
 $info = "";
-if($_POST["register"] == "Registruotis")
+if(isset($_POST["register"]) && $_POST["register"] == "Registruotis")
 {
+    $username = $_POST["username"];
+    $name = $_POST["name"];
+    $last = $_POST["last_name"];
+    $pass = $_POST["password"];
     if ($_POST["username"] == '' && $_POST["name"] == '' && $_POST["last_name"] == '' && $_POST["password"] == '' && $_POST["passwordCheck"] == '') {
         echo "Prašome užpildyti visus laukelius";
     } else {

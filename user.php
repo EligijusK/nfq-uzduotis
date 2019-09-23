@@ -1,4 +1,5 @@
 <?php
+include "session.inc";
 include 'dbh.inc';
 include 'header.inc';
 $userId = $_SESSION['userID'];
@@ -30,9 +31,9 @@ if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSIO
 
     }
 
-    if ($_GET['time'] <= 0 && isset($_GET['submitVisit'])) {
+    if (isset($_GET['submitVisit']) && $_GET['time'] <= 0) {
         echo "vizito laikas turi užtrukti ilgiau negu 0 minučių";
-    } else if ($_GET['time'] > 0 && isset($_GET['submitVisit'])) {
+    } else if (isset($_GET['submitVisit']) && $_GET['time'] > 0) {
         $info = $_GET['info'];
         $visitTime = $_GET['time'];
         $checkIfInsert = "SELECT serviced_check, fk_USER_id FROM SERVING
@@ -42,7 +43,7 @@ WHERE fk_USER_id = '$userId' AND serviced_check = 0";
                 $insertVisit = "INSERT INTO SERVING (servicing_info, serviced_check, visit_time, fk_USER_id)
             VALUES ('$info', '0', '$visitTime', '$userId')";
                 if (mysqli_query($sql, $insertVisit)) {
-
+                    header("Location: ./user.php?addedVisit");
                 }
             } else {
                 echo "Jūsų vizitas jau suplanuotas";
@@ -125,7 +126,7 @@ GROUP BY serviced_check";
     }
     ?> </div> <?php
 }
-else if (isset($_GET['ticket']) && $_GET['ticket'] > -1 && sset($_SESSION['ticketId'])){
+else if (isset($_GET['ticket']) && $_GET['ticket'] > -1 && isset($_SESSION['ticketId'])){
     echo "<div>Skaičius per mažas</div>";
 }
 

@@ -1,9 +1,8 @@
 <?php
-
+include 'session.inc';
 include "dbh.inc";
 include 'header.inc';
-$username = $_POST["username"];
-$password = $_POST["password"];
+
 $cnt = 0;
 foreach ($_POST as $key => $value) {
     if (isset($_POST['' . $key . '']) && $_POST['' . $key . ''] != " " && $_POST['' . $key . ''] != "") {
@@ -12,6 +11,8 @@ foreach ($_POST as $key => $value) {
 }
 
 if(isset($_POST['Login'])) {
+    $password = $_POST["password"];
+    $username = $_POST["username"];
     Login($username, $password, $cnt, true, "ADMINS", $sql);
 }
 ?>

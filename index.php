@@ -1,5 +1,5 @@
 <?php
-include 'session.php';
+include 'session.inc';
 include 'header.inc';
 include 'dbh.inc';
 ?>

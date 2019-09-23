@@ -1,6 +1,7 @@
 <?php
-include 'header.inc';
+include 'session.inc';
 include 'dbh.inc';
+include 'header.inc';
 $userId = $_SESSION['userID'];
 if(isset($_GET['LogOut']))
 {
@@ -11,15 +12,15 @@ if(isset($_GET['LogOut']))
     header( "Location: ./admin-login.php");
 }
 if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSION['administrator'] == true && isset($_SESSION['userID'])) {
+
     if (isset($_GET['finish'])) {
         $_SESSION['timePassed'] = null;
         $setAccepted = "UPDATE SERVING
 SET serviced_check = 1, time_finished = NOW()
-WHERE serviced_check = 0 AND fk_ADMIN_id NOT NULL 
+WHERE serviced_check = 0 AND fk_ADMIN_id IS NOT NULL 
 ORDER BY time_submitted, visit_time
 LIMIT 1";
         if (mysqli_query($sql, $setAccepted)) {
-
         }
 
     }

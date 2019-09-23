@@ -1,6 +1,6 @@
 <?php
+include "session.inc";
 include "dbh.inc";
-include "session.php";
 $data = array(
     'timeAproximate' => '',
     'time' => ''
