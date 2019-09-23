@@ -2,7 +2,7 @@
 include "session.inc";
 include 'dbh.inc';
 include 'header.inc';
-$userId = $_SESSION['userID'];
+$userId = mysqli_real_escape_string($sql, $_SESSION['userID']);
 
 if(isset($_GET['LogOut']))
 {
@@ -34,8 +34,8 @@ if(isset($_SESSION['username']) && isset($_SESSION['administrator']) && $_SESSIO
     if (isset($_GET['submitVisit']) && $_GET['time'] <= 0) {
         echo "vizito laikas turi užtrukti ilgiau negu 0 minučių";
     } else if (isset($_GET['submitVisit']) && $_GET['time'] > 0) {
-        $info = $_GET['info'];
-        $visitTime = $_GET['time'];
+        $info = mysqli_real_escape_string($sql, $_GET['info']);
+        $visitTime = mysqli_real_escape_string($sql, $_GET['time']);
         $checkIfInsert = "SELECT serviced_check, fk_USER_id FROM SERVING
 WHERE fk_USER_id = '$userId' AND serviced_check = 0";
         if ($res = mysqli_query($sql, $checkIfInsert)) {

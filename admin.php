@@ -2,7 +2,7 @@
 include 'session.inc';
 include 'dbh.inc';
 include 'header.inc';
-$userId = $_SESSION['userID'];
+$userId = mysqli_real_escape_string($sql, $_SESSION['userID']);
 if(isset($_GET['LogOut']))
 {
     $_SESSION['username'] = null;

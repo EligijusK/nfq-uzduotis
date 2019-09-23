@@ -4,10 +4,10 @@ include 'dbh.inc';
 $info = "";
 if(isset($_POST["register"]) && $_POST["register"] == "Registruotis")
 {
-    $username = $_POST["username"];
-    $name = $_POST["name"];
-    $last = $_POST["last_name"];
-    $pass = $_POST["password"];
+    $username = mysqli_real_escape_string($sql, $_POST["username"]);
+    $name = mysqli_real_escape_string($sql, $_POST["name"]);
+    $last = mysqli_real_escape_string($sql, $_POST["last_name"]);
+    $pass = mysqli_real_escape_string($sql, $_POST["password"]);
     if ($_POST["username"] == '' && $_POST["name"] == '' && $_POST["last_name"] == '' && $_POST["password"] == '' && $_POST["passwordCheck"] == '') {
         echo "Prašome užpildyti visus laukelius";
     } else {

@@ -11,8 +11,8 @@ foreach ($_POST as $key => $value) {
 }
 
 if(isset($_POST['Login'])) {
-    $password = $_POST["password"];
-    $username = $_POST["username"];
+    $password = mysqli_real_escape_string($sql, $_POST["password"]);
+    $username = mysqli_real_escape_string($sql, $_POST["username"]);
     Login($username, $password, $cnt, true, "ADMINS", $sql);
 }
 ?>

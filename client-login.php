@@ -5,13 +5,13 @@ include 'header.inc';
 
 $cnt = 0;
 foreach ($_POST as $key => $value) {
-    if (isset($_POST['' . $key . '']) && $_POST['' . $key . ''] != " " && $_POST['' . $key . ''] != "") {
+    if (isset($_POST['' . $key . '']) && $_POST['' . $key . ''] != " " && $_POST['' . $key . ''] != "" && mysqli_real_escape_string($sql, $_POST['' . $key . ''])) {
         $cnt = $cnt + 1;
     }
 }
 if(isset($_POST["Login"])) {
-    $password = $_POST["password"];
-    $username = $_POST["username"];
+    $password = mysqli_real_escape_string($sql, $_POST["password"]);
+    $username = mysqli_real_escape_string($sql, $_POST["username"]);
     Login($username, $password, $cnt, false, "USERS", $sql);
 }
 ?>
